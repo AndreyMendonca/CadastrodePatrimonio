@@ -3,11 +3,14 @@ package com.senai.backend.service;
 import com.senai.backend.controllers.dtos.SetorDtoCreate;
 import com.senai.backend.controllers.dtos.SetorDtoUpdate;
 import com.senai.backend.entities.SetorEntity;
+import com.senai.backend.exceptions.EntityDeleteException;
 import com.senai.backend.exceptions.EntityNotFoundException;
 import com.senai.backend.repositories.SetorRepository;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,11 @@ public class SetorService {
 
     public void delete(Long id) {
         this.findById(id);
-        setorRepository.deleteById(id);
+        try{
+            setorRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new EntityDeleteException("Não é possível deletar um setor vinculado a algum patrimônio");
+        }
     }
 
     public List<SetorEntity> findAll() {

@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/setores")
+@CrossOrigin("*")
 public class SetorController {
 
     private final SetorService setorService;

@@ -6,6 +6,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import { Setor } from "@/types/setores";
+import { useEffect } from "react";
 
 
 const formSchema = z.object({
@@ -16,9 +18,11 @@ const formSchema = z.object({
 type Props = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    handleSalvar: (id: number, setor: z.infer<typeof formSchema>) => Promise<void>;
+    setor: Setor | null;
 }
 
-export const DialogSetores = ({ open, onOpenChange }: Props) => {
+export const DialogSetores = ({ open, onOpenChange, handleSalvar, setor }: Props) => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -28,9 +32,24 @@ export const DialogSetores = ({ open, onOpenChange }: Props) => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        if (setor) {
+            await handleSalvar(setor.id, values);
+        }else{
+            await handleSalvar(0, values);
+        }
         form.reset();
     }
+
+    useEffect(() => {
+        const values = {
+            nome: setor ? setor.nome : "",
+        };
+        form.reset(values);
+    }, [setor, form.reset]);
+
+    useEffect(() => {
+        form.reset();
+    }, [open])
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -48,11 +67,11 @@ export const DialogSetores = ({ open, onOpenChange }: Props) => {
                             name="nome"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>Identificação *</FormLabel>
+                                    <FormLabel>Nome *</FormLabel>
                                     <FormControl>
                                         <Input
                                             autoFocus
-                                            placeholder="Digite a identificação"
+                                            placeholder="Digite o nome do setor"
                                             {...field}
                                         />
                                     </FormControl>

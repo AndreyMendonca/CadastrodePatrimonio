@@ -11,8 +11,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/*
+ * Regras de negócio - Patrimonio
+ * */
 @Service
 public class PatrimonioService {
+    /*
+     Dependencias que o service tem.
+     * */
     private final PatrimonioRepository patrimonioRepository;
     private final SetorRepository setorRepository;
 
@@ -21,6 +27,11 @@ public class PatrimonioService {
         this.setorRepository = setorRepository;
     }
 
+    /*
+     * Recurso para salvar o patrimonio
+     * Como o patrimonio é vinculado a um setor, é feito uma busca para validar se o setor existe
+     * Caso o setor não exista, a operação é finalizada retornando um erro
+     * */
     public PatrimonioEntity save(@Valid PatrimonioDtoCreate dto) {
         var setor = setorRepository.findById(dto.setor())
                 .orElseThrow(()-> new EntityNotFoundException("Setor não encontrado"));
@@ -34,15 +45,26 @@ public class PatrimonioService {
         return patrimonioRepository.save(patrimonio);
     }
 
+    /*
+     * Recurso para localizar o patrimonio por ID
+     * Caso o patrimonio não exista, a operação é ifinalizada retornando um erro
+     * */
     public PatrimonioEntity findById(Long id) {
         return patrimonioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Patrimônio não encontrado"));
     }
 
+    /*
+     * Recurso para localizar todos os cadastros
+     * */
     public List<PatrimonioEntity> findAll() {
         return patrimonioRepository.findAll();
     }
 
+    /*
+     * Recurso para atualizar o patrimonio.
+     * É necessario enviar um o ID do patrimonio que deseja atualizar, em conjunto com as informações
+     * */
     public void update(Long id, @Valid PatrimonioDtoUpdate dto) {
         var patrimonio = this.findById(id);
         var setor = setorRepository.findById(dto.setor())
@@ -55,6 +77,10 @@ public class PatrimonioService {
         patrimonioRepository.save(patrimonio);
     }
 
+    /*
+     * Recurso para deletar o patrimonio por ID
+     * Caso o patrimonio não exista, a operação é finalizada retornando um erro
+     * */
     public void delete(Long id) {
         this.findById(id);
         patrimonioRepository.deleteById(id);

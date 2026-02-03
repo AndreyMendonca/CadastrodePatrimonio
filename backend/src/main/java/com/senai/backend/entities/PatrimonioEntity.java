@@ -2,6 +2,9 @@ package com.senai.backend.entities;
 
 import jakarta.persistence.*;
 
+/*
+ * Entidade do sistema
+ * */
 @Entity
 @Table(name = "tb_patrimonio")
 public class PatrimonioEntity {

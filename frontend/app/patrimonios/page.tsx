@@ -69,14 +69,14 @@ export default function PatrimoniosPage() {
     return (
         <Layout>
             <div className="flex justify-between items-center mb-2">
-                <p className="text-4xl font-bold">Patrimônio</p>
+                <p className="text-xl sm:text-4xl font-bold">Patrimônio</p>
                 <Button onClick={() => abrirDialog(null)} asChild>
                     <p>Adicionar Patrimônio</p>
                 </Button>
             </div>
             <Separator />
             <Table>
-                <TableCaption>Lista de patrimonios</TableCaption>
+                <TableCaption>Lista de patrimônios</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-25">ID</TableHead>
